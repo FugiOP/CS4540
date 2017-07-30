@@ -11,7 +11,7 @@ import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
-    private PagerAdapter adapter;
+    public static PagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

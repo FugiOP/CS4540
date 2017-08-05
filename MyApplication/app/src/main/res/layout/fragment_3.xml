@@ -21,9 +21,5 @@
         android:id="@+id/VideoList"
         android:scrollbars="vertical">
     </android.support.v7.widget.RecyclerView>
-    <!--<FrameLayout-->
-        <!--android:id="@+id/videoFrame"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="200dp"></FrameLayout>-->
 
 </LinearLayout>

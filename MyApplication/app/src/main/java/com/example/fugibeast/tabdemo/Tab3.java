@@ -3,6 +3,7 @@ package com.example.fugibeast.tabdemo;
 
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -44,6 +45,7 @@ public class Tab3 extends Fragment implements YouTubeThumbnailView.OnInitialized
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         LayoutInflater lf = getActivity().getLayoutInflater();
         view = lf.inflate(R.layout.fragment_3,container,false);
         Context context = getContext();

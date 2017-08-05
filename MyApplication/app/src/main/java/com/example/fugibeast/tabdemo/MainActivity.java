@@ -22,9 +22,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
-        tabLayout.addTab(tabLayout.newTab().setText("Tab 2"));
-        tabLayout.addTab(tabLayout.newTab().setText("Tab 3"));
 
         viewPager = (ViewPager) findViewById(R.id.container);
         adapter = new PagerAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
@@ -92,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
                     Tab2 tab2 = new Tab2();
                     return tab2;
                 case 2:
-                    Tab3 tab3 = new Tab3();
-                    return tab3;
+                    Tab4 tab4 = new Tab4();
+                    return tab4;
                 default:
                     return null;
             }
@@ -101,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
+            // Show 4 total pages.
             return 3;
         }
     }

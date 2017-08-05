@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.speech.tts.TextToSpeech;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener{
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     TextToSpeech textToSpeech;
     EditText timeSet;
     int time = 0;
+    String[] list = {"Push Ups in 5 seconds", "3", "2", "1", "Start Sit Ups for 30 Seconds"};
 
     private int MY_DATA_CHECK_CODE = 0;
     Boolean flag = true;
@@ -39,25 +41,28 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CountDownTimer countDownTimer = new CountDownTimer(Integer.valueOf(timeSet.getText().toString())*1000,1000) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        if(millisUntilFinished < 6000 && flag == true){
-                            speak("5 seconds left");
-                            flag = false;
-                        }
-                        if(millisUntilFinished<4000){
-                            speak(millisUntilFinished / 1000 + "");
-                        }
-                        timerView.setText(""+millisUntilFinished/1000);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        speak("Done");
-                        timerView.setText("Done");
-                    }
-                }.start();
+//                CountDownTimer countDownTimer = new CountDownTimer(Integer.valueOf(timeSet.getText().toString())*1000,1000) {
+//                    @Override
+//                    public void onTick(long millisUntilFinished) {
+//                        if(millisUntilFinished < 6000 && flag == true){
+//                            speak("5 seconds left");
+//                            flag = false;
+//                        }
+//                        if(millisUntilFinished<4000){
+//                            speak(millisUntilFinished / 1000 + "");
+//                        }
+//                        timerView.setText(""+millisUntilFinished/1000);
+//                    }
+//
+//                    @Override
+//                    public void onFinish() {
+//                        speak("Done");
+//                        timerView.setText("Done");
+//                    }
+//                }.start();
+                for(int i = 0; i<list.length; i++){
+                    speak(list[i]);
+                }
             }
         });
     }
@@ -77,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
             textToSpeech.setLanguage(Locale.US);
+            textToSpeech.setPitch(1);
+            textToSpeech.setSpeechRate(0);
         }else if (status == TextToSpeech.ERROR) {
             Toast.makeText(this, "Sorry! Text To Speech failed...", Toast.LENGTH_LONG).show();
         }

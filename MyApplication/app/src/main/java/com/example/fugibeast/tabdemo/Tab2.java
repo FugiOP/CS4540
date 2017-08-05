@@ -33,7 +33,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
  */
 
 public class Tab2 extends Fragment implements OnMapReadyCallback {
-
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;
     LocationRequest mLocationRequest = new LocationRequest().setInterval(10000).setFastestInterval(5000).setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -44,8 +43,7 @@ public class Tab2 extends Fragment implements OnMapReadyCallback {
     TextView tv;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.map_fragment, container, false);
 
         if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

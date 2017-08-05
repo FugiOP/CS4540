@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/shuffle_music"
+        android:icon="@drawable/random"
+        android:orderInCategory="1"
+        android:title="Shuffle" />
+
+    <item
+        android:id="@+id/stop_music"
+        android:icon="@drawable/stop"
+        android:orderInCategory="2"
+        android:title="End"/>
+
+</menu>

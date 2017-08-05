@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/watch"
+        android:orderInCategory="1"
+        android:title="@string/watch_string" />
+
+    <item
+        android:id="@+id/music"
+        android:orderInCategory="2"
+        android:title="@string/music_string" />
+
+</menu>

@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.calvin.workout.data.Contract;
+import com.squareup.picasso.Picasso;
+
 /**
  * Created by FugiBeast on 8/5/2017.
  */
@@ -18,10 +21,11 @@ public class RoutineListAdapter extends RecyclerView.Adapter<RoutineListAdapter.
     private Cursor cursor;
     private ItemClickListener listener;
     private String TAG = "routinelistadapter";
+    Context context;
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        Context context = parent.getContext();
+        context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View view = inflater.inflate(R.layout.item, parent, false);
@@ -73,14 +77,14 @@ public class RoutineListAdapter extends RecyclerView.Adapter<RoutineListAdapter.
 
         public void bind(ItemHolder holder, int pos) {
             cursor.moveToPosition(pos);
-            id = cursor.getLong(cursor.getColumnIndex(Contract.TABLE_TODO._ID));
+            id = cursor.getLong(cursor.getColumnIndex(Contract.TABLE_USER_WORKOUT._ID));
             Log.d(TAG, "deleting id: " + id);
 
-            exerciseName.setText(cursor.getString(cursor.getColumnIndex(Contract)));
-            String img = cursor.getString(cursor.getColumnIndex(Contract));
-            exerciseCalories.setText(cursor.getString(cursor.getColumnIndex(Contract)));
+            exerciseName.setText(cursor.getString(cursor.getColumnIndex(Contract.TABLE_USER_WORKOUT.COLUMN_NAME)));
+            String img = cursor.getString(cursor.getColumnIndex(Contract.TABLE_USER_WORKOUT.COLUMN_IMAGE));
+            exerciseCalories.setText(cursor.getString(cursor.getColumnIndex(Contract.TABLE_USER_WORKOUT.COLUMN_CALORIES)));
             if(img != null){
-                Picasso.with(context).load(exerciseImage).into(exerciseImage);
+                Picasso.with(context).load(img).into(exerciseImage);
             }
             holder.itemView.setTag(id);
 

@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.calvin.workout.data.Contract;
 import com.example.calvin.workout.data.UserContract;
 import com.example.calvin.workout.data.userDBHelper;
 import com.example.calvin.workout.models.userProfile;
@@ -27,15 +28,15 @@ import static com.example.calvin.workout.data.UserContract.TABLE_USER.COLUMN_NAM
 import static com.example.calvin.workout.data.UserContract.TABLE_USER.COLUMN_NAME_INCHES;
 import static com.example.calvin.workout.data.UserContract.TABLE_USER.COLUMN_NAME_NAME;
 import static com.example.calvin.workout.data.UserContract.TABLE_USER.COLUMN_NAME_WEIGHT;
-import static com.example.calvin.workout.data.UserContract.TABLE_USER.TABLE_NAME;
 
+/**
+ * Created by FugiBeast on 8/6/2017.
+ */
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+public class UpdateProfile extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private SQLiteDatabase db;
     private userDBHelper helper;
-    private TextView User;
-    private TextView Welcome;
     Button submitButton;
     EditText weightText;
     EditText nameText;
@@ -43,14 +44,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     Spinner fSpinner;
     Spinner iSpinner;
     Cursor cursor;
-
-    private String TAG= "userTest";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_form);
-
+        //***********spinners
         // Spinner element
         gSpinner = (Spinner) findViewById(R.id.gender_spinner);
         fSpinner = (Spinner) findViewById(R.id.ft_spinner);
@@ -58,14 +56,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         nameText = (EditText)findViewById(R.id.name);
         weightText = (EditText)findViewById(R.id.weight);
 
-        helper = new userDBHelper(this);
-        db = helper.getWritableDatabase();
-        cursor = getUserData(db);
-
-        if(cursor.getCount()>0){
-            Intent intent = new Intent(this, MapActivity.class);
-            startActivity(intent);
-        }
         // Spinner click listener
         gSpinner.setOnItemSelectedListener(this);
         fSpinner.setOnItemSelectedListener(this);
@@ -132,6 +122,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         helper = new userDBHelper(this);
         db = helper.getWritableDatabase();
+        cursor = getUserData(db);
+        cursor.moveToFirst();
+        nameText.setText(cursor.getString(cursor.getColumnIndex(UserContract.TABLE_USER.COLUMN_NAME_NAME)));
+        weightText.setText(cursor.getString(cursor.getColumnIndex(UserContract.TABLE_USER.COLUMN_NAME_WEIGHT)));
+        int gspinnerpos = dataAdapter.getPosition(cursor.getString(cursor.getColumnIndex(UserContract.TABLE_USER.COLUMN_NAME_GENDER)));
+        gSpinner.setSelection(gspinnerpos);
+        int fspinnerpos = dataFAdapter.getPosition(cursor.getString(cursor.getColumnIndex(COLUMN_NAME_FEET)));
+        fSpinner.setSelection(fspinnerpos);
+        int ispinnerpos = dataIAdapter.getPosition(cursor.getString(cursor.getColumnIndex(UserContract.TABLE_USER.COLUMN_NAME_INCHES)));
+        iSpinner.setSelection(ispinnerpos);
 
         submitButton=(Button)findViewById(R.id.submit);
         submitButton.setOnClickListener(new View.OnClickListener()
@@ -162,9 +162,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
 
                 userProfile user = new userProfile(heightfeet,heightinches,name,gender,weight);
-                addUser(db,user);
+                updateUser(db,user);
 
-                Toast.makeText(MainActivity.this,"Lets Get Started",Toast.LENGTH_LONG).show();
+                Toast.makeText(UpdateProfile.this,"Lets Get Started",Toast.LENGTH_LONG).show();
                 sendUser(v);
             }
 
@@ -186,16 +186,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     {
         // TODO Auto-generated method stub
     }
-    public long addUser(SQLiteDatabase db,userProfile user){
-        ContentValues cv = new ContentValues();
-        cv.put(COLUMN_NAME_NAME, user.getName());
-        cv.put(COLUMN_NAME_GENDER, user.getGender());
-        cv.put(COLUMN_NAME_FEET, user.getFeet());
-        cv.put(COLUMN_NAME_INCHES, user.getInches());
-        cv.put(COLUMN_NAME_WEIGHT, user.getWeight());
-
-        return db.insert(TABLE_NAME, null,cv);
-    }
     private Cursor getUserData(SQLiteDatabase db){
         return db.query(
                 UserContract.TABLE_USER.TABLE_NAME,
@@ -206,5 +196,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 null,
                 null
         );
+    }
+    private int updateUser(SQLiteDatabase db, userProfile user){
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_NAME_NAME, user.getName());
+        cv.put(COLUMN_NAME_GENDER, user.getGender());
+        cv.put(COLUMN_NAME_FEET, user.getFeet());
+        cv.put(COLUMN_NAME_INCHES, user.getInches());
+        cv.put(COLUMN_NAME_WEIGHT, user.getWeight());
+
+        return db.update(UserContract.TABLE_USER.TABLE_NAME, cv,null, null);
     }
 }

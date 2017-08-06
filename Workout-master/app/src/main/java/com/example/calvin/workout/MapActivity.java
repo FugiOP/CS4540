@@ -1,6 +1,7 @@
 package com.example.calvin.workout;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -12,6 +13,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -258,5 +261,31 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             // other 'case' lines to check for other permissions this app might request.
             //You can add here other case statements according to your requirement.
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.routine){
+            Intent intent = new Intent(this, RoutineActivity.class);
+            startActivity(intent);
+        }
+        else if (item.getItemId() == R.id.music) {
+            Intent intent = new Intent(this, MusicActivity.class);
+            startActivity(intent);
+        }
+        else if (item.getItemId() == R.id.graph) {
+            Intent intent = new Intent(this, GraphActivity.class);
+            startActivity(intent);
+        }else if (item.getItemId() == R.id.profile) {
+            Intent intent = new Intent(this,UpdateProfile.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

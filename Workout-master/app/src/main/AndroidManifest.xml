@@ -27,28 +27,33 @@
             android:name=".RoutineActivity"
             android:label="Routine"
             android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MapActivity">
         </activity>
         <activity
             android:name=".MusicActivity"
             android:label="@string/Music"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MapActivity">
         </activity>
         <service android:name=".MusicService" >
 
         </service>
         <activity
             android:name=".MapActivity"
-            android:label="Map"
-            android:parentActivityName=".MainActivity">
+            android:label="Map">
         </activity>
         <activity
             android:name=".GraphActivity"
             android:label="Graph"
             android:screenOrientation="landscape"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MapActivity">
+        </activity>
+        <activity
+            android:name=".UpdateProfile"
+            android:label="Profile"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MapActivity">
         </activity>
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

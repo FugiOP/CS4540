@@ -3,15 +3,12 @@ package com.example.calvin.workout;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.calvin.workout.data.Contract;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by FugiBeast on 8/5/2017.
@@ -21,11 +18,11 @@ public class RoutineListAdapter extends RecyclerView.Adapter<RoutineListAdapter.
     private Cursor cursor;
     private ItemClickListener listener;
     private String TAG = "routinelistadapter";
-    Context context;
+
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        context = parent.getContext();
+        Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View view = inflater.inflate(R.layout.item, parent, false);
@@ -44,7 +41,7 @@ public class RoutineListAdapter extends RecyclerView.Adapter<RoutineListAdapter.
     }
 
     public interface ItemClickListener {
-        void onItemClick(Cursor cursor, int pos);
+        void onItemClick(int pos, String name, long id, String time);
     }
 
     public RoutineListAdapter(Cursor cursor, ItemClickListener listener) {
@@ -63,37 +60,36 @@ public class RoutineListAdapter extends RecyclerView.Adapter<RoutineListAdapter.
 
     class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView exerciseName;
-        ImageView exerciseImage;
-        TextView exerciseCalories;
+        String exercise;
+        TextView exerciseTime;
+        String time;
         long id;
 
         ItemHolder(View view) {
             super(view);
             exerciseName = (TextView) view.findViewById(R.id.exerciseName);
-            exerciseImage = (ImageView) view.findViewById(R.id.exerciseImage);
-            exerciseCalories = (TextView)view.findViewById(R.id.exerciseCalories);
+            exerciseTime = (TextView)view.findViewById(R.id.exerciseTime);
+
             view.setOnClickListener(this);
         }
 
         public void bind(ItemHolder holder, int pos) {
             cursor.moveToPosition(pos);
             id = cursor.getLong(cursor.getColumnIndex(Contract.TABLE_USER_WORKOUT._ID));
-            Log.d(TAG, "deleting id: " + id);
 
-            exerciseName.setText(cursor.getString(cursor.getColumnIndex(Contract.TABLE_USER_WORKOUT.COLUMN_NAME)));
-            String img = cursor.getString(cursor.getColumnIndex(Contract.TABLE_USER_WORKOUT.COLUMN_IMAGE));
-            exerciseCalories.setText(cursor.getString(cursor.getColumnIndex(Contract.TABLE_USER_WORKOUT.COLUMN_CALORIES)));
-            if(img != null){
-                Picasso.with(context).load(img).into(exerciseImage);
-            }
+            exercise = cursor.getString(cursor.getColumnIndex(Contract.TABLE_USER_WORKOUT.COLUMN_NAME_EXERCISE));
+            exerciseName.setText(exercise);
+
+            time = cursor.getString(cursor.getColumnIndex(Contract.TABLE_USER_WORKOUT.COLUMN_NAME_TIME));
+            exerciseTime.setText(time+" Seconds");
+
             holder.itemView.setTag(id);
-
         }
 
         @Override
         public void onClick(View v) {
             int pos = getAdapterPosition();
-            listener.onItemClick(cursor, pos);
+            listener.onItemClick(pos,exercise,id,time);
         }
     }
 

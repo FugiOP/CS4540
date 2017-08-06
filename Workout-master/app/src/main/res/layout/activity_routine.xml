@@ -5,17 +5,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/routineList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </android.support.v7.widget.RecyclerView>
-
     <Button
         android:id="@+id/addExercise"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Item"
-        />
+        android:text="Add Item" />
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/routineList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.63">
+    </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/timerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.20"
+        android:textAlignment="center"
+        android:textSize="150px"
+        android:textStyle="bold"/>
+
+    <Button
+        android:id="@+id/timerStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start"
+        android:textStyle="bold"
+        android:textSize="60px" />
 </LinearLayout>

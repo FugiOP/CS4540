@@ -7,17 +7,16 @@ package com.example.calvin.workout.data;
 import android.provider.BaseColumns;
 
 public class Contract{
+
     public static class TABLE_USER_WORKOUT implements BaseColumns {
-        public static final String TABLE_NAME = "exercises";
-        public static final String COLUMN_NAME = "name";;
-        public static final String COLUMN_CALORIES = "calories";
-        public static final String COLUMN_IMAGE = "img";
+        public static final String TABLE_NAME = "exercises_user";
+        public static final String COLUMN_NAME_EXERCISE = "name_user";;
+        public static final String COLUMN_NAME_TIME = "time_user";
     }
 
     public static class TABLE_DB_WORKOUT implements BaseColumns {
-        public static final String TABLE_NAME = "exercises";
-        public static final String COLUMN_NAME = "name";;
-        public static final String COLUMN_CALORIES = "calories";
-        public static final String COLUMN_IMAGE = "img";
+        public static final String TABLE_NAME = "exercises_db";
+        public static final String COLUMN_NAME_EXERCISE = "name_db";;
+        public static final String COLUMN_NAME_CALORIES = "calories_db";
     }
 }

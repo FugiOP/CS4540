@@ -22,17 +22,17 @@ public class AddRoutineFragment extends DialogFragment{
     Button add;
     String exercise;
     String time;
+
     public AddRoutineFragment() {
     }
 
     public interface OnDialogCloseListener {
-        void closeDialog(String excercise,int time);
+        void closeDialog(String name,String time);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_routine_adder,container,false);
-        add = (Button) view.findViewById(R.id.add);
 
         //reference to spinner in fragment
         exercises = (Spinner) view.findViewById(R.id.exercises);
@@ -51,11 +51,11 @@ public class AddRoutineFragment extends DialogFragment{
         exerciseList.add("Jump Rope");
 
         List<String> timeList = new ArrayList<>();
-        timeList.add("Non-Timed");
-        timeList.add("30 Seconds");
-        timeList.add("60 Seconds");
-        timeList.add("90 Seconds");
-        timeList.add("120 Seconds");
+        timeList.add("0");
+        timeList.add("30");
+        timeList.add("60");
+        timeList.add("90");
+        timeList.add("120");
 
         //Creating adapter for spinner
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, exerciseList);
@@ -66,12 +66,14 @@ public class AddRoutineFragment extends DialogFragment{
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         times.setAdapter(dataAdapter);
 
+        add = (Button) view.findViewById(R.id.add);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 OnDialogCloseListener activity = (OnDialogCloseListener) getActivity();
                 exercise = exercises.getSelectedItem().toString();
                 time = times.getSelectedItem().toString();
+                activity.closeDialog(exercise,time);
                 AddRoutineFragment.this.dismiss();
             }
         });

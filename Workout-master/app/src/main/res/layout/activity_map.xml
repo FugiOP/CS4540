@@ -20,6 +20,12 @@
     <TextView
         android:id="@+id/calcDistance"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="60px"/>
+    <TextView
+        android:id="@+id/caloriesBurnt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="60px"/>
 
 </LinearLayout>

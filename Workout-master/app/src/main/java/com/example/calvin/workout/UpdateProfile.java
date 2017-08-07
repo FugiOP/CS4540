@@ -134,6 +134,7 @@ public class UpdateProfile extends AppCompatActivity implements AdapterView.OnIt
         iSpinner.setSelection(ispinnerpos);
 
         submitButton=(Button)findViewById(R.id.submit);
+        submitButton.setText("Update");
         submitButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -164,7 +165,7 @@ public class UpdateProfile extends AppCompatActivity implements AdapterView.OnIt
                 userProfile user = new userProfile(heightfeet,heightinches,name,gender,weight);
                 updateUser(db,user);
 
-                Toast.makeText(UpdateProfile.this,"Lets Get Started",Toast.LENGTH_LONG).show();
+                Toast.makeText(UpdateProfile.this,"Profile Updated",Toast.LENGTH_LONG).show();
                 sendUser(v);
             }
 

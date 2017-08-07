@@ -30,7 +30,7 @@ import java.util.Locale;
  * Created by FugiBeast on 8/5/2017.
  */
 
-public class RoutineActivity extends AppCompatActivity implements TextToSpeech.OnInitListener,AddRoutineFragment.OnDialogCloseListener, UpdateRoutineFragment.OnUpdateDialogCloseListener, AdapterView.OnItemSelectedListener{
+public class RoutineActivity extends AppCompatActivity implements View.OnClickListener,TextToSpeech.OnInitListener,AddRoutineFragment.OnDialogCloseListener, UpdateRoutineFragment.OnUpdateDialogCloseListener, AdapterView.OnItemSelectedListener{
     Button btn;
     Button timerStart;
     static ArrayList<TimerModel> timerlist;
@@ -38,6 +38,9 @@ public class RoutineActivity extends AppCompatActivity implements TextToSpeech.O
     TextToSpeech textToSpeech;
     private int MY_DATA_CHECK_CODE = 0;
     int count = 0;
+    private boolean timerHasStarted = false;
+    CountDownTimer countDownTimer1;
+    CountDownTimer countDownTimer2;
 
     private RecyclerView rv;
     private DBHelper helper;
@@ -68,12 +71,7 @@ public class RoutineActivity extends AppCompatActivity implements TextToSpeech.O
         timerlist = new ArrayList<>();
 
         timerStart = (Button)findViewById(R.id.timerStart);
-        timerStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startFirstTimer();
-            }
-        });
+        timerStart.setOnClickListener(this);
 
         rv = (RecyclerView) findViewById(R.id.routineList);
         rv.setLayoutManager(new LinearLayoutManager(this));
@@ -184,7 +182,7 @@ public class RoutineActivity extends AppCompatActivity implements TextToSpeech.O
         if(count<timerlist.size()){
             final String name = timerlist.get(count).getName();
             final String time = timerlist.get(count).getTime();
-            CountDownTimer countDownTimer = new CountDownTimer(8000,1000) {
+            countDownTimer1 = new CountDownTimer(8000,1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
                     if(millisUntilFinished<=8000 && millisUntilFinished>7000){
@@ -211,7 +209,7 @@ public class RoutineActivity extends AppCompatActivity implements TextToSpeech.O
         if(count<timerlist.size()){
             final String name = timerlist.get(count).getName();
             final String time = timerlist.get(count).getTime();
-            CountDownTimer countDownTimer = new CountDownTimer(Integer.valueOf(time)*1000,1000) {
+            countDownTimer2 = new CountDownTimer(Integer.valueOf(time)*1000,1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
                     timerView.setText(millisUntilFinished/1000+"'s");
@@ -254,5 +252,27 @@ public class RoutineActivity extends AppCompatActivity implements TextToSpeech.O
     }
     public void speak(String text){
         textToSpeech.speak(text, TextToSpeech.QUEUE_ADD,null);
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        if (!timerHasStarted)
+        {
+            startFirstTimer();
+            timerHasStarted = true;
+            timerStart.setText("Stop");
+        }
+        else
+        {
+            if(countDownTimer1!=null){
+                countDownTimer1.cancel();
+            }
+            if(countDownTimer2!=null) {
+                countDownTimer2.cancel();
+            }
+            timerHasStarted = false;
+            timerStart.setText("Reset");
+        }
     }
 }

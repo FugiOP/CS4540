@@ -82,8 +82,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         startBtn = (Button) findViewById(R.id.startBtn);
         myChronometer = (Chronometer)findViewById(R.id.trackChrono);
+
         calcDist = (TextView)findViewById(R.id.calcDistance);
         calcDist.setText("0.00 meters");
+
         caloriesBurnt = (TextView)findViewById(R.id.caloriesBurnt);
         caloriesBurnt.setText("Calories burned : "+totalCalories);
 
@@ -110,6 +112,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         addToPolyline(oldLocation);
                         DecimalFormat df = new DecimalFormat("#.00");
                         calcDist.setText(df.format(((distanceCovered*100.0)/100.0)*0.00062137119) + " miles");
+                        caloriesBurnt.setText("Calories burned: "+df.format((((distanceCovered*100.0)/100.0)*0.00062137119*0.76*200)));
                     }
                 }
         );
@@ -147,6 +150,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void createLocationRequest() {
         mLocationRequest = new LocationRequest();
+        mLocationRequest.setSmallestDisplacement(20);
         mLocationRequest.setInterval(LOCATION_REQUEST_INTERVAL);
         mLocationRequest.setFastestInterval(LOCATION_REQUEST_FASTEST_INTERVAL);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
@@ -331,6 +335,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     public void endTracking(View view) {
         startBtn.setText("Start");
+        caloriesBurnt.setText("Calories Burned: 0.0");
         myChronometer.stop();
     }
 }

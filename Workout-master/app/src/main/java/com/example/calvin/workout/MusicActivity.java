@@ -16,7 +16,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.MediaController;
 import android.widget.MediaController.MediaPlayerControl;
+import android.widget.TextView;
 
 import com.example.calvin.workout.MusicService.MusicBinder;
 import com.example.calvin.workout.models.SongModel;
@@ -26,7 +28,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 /**
- * Created by Calvin on 8/3/2017.
+ * Created by fumjum on 8/3/2017.
  */
 
 public class MusicActivity extends AppCompatActivity implements MediaPlayerControl {
@@ -37,7 +39,7 @@ public class MusicActivity extends AppCompatActivity implements MediaPlayerContr
     private MusicService musService;
     private Intent intent;
     private boolean musicBound = false;
-    private boolean paused= false;
+    public boolean paused = false;
     private boolean playbackPaused = false;
 
     @Override
@@ -48,20 +50,20 @@ public class MusicActivity extends AppCompatActivity implements MediaPlayerContr
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 
                 return;
             }
         }
 
-        songView = (ListView)findViewById(R.id.song_list);
+        songView = (ListView) findViewById(R.id.song_list);
 
         songList = new ArrayList<SongModel>();
 
         getSongList();
 
-        Collections.sort(songList, new Comparator<SongModel>(){
-            public int compare(SongModel a, SongModel b){
+        Collections.sort(songList, new Comparator<SongModel>() {
+            public int compare(SongModel a, SongModel b) {
                 return a.getTitle().compareTo(b.getTitle());
             }
         });
@@ -77,13 +79,14 @@ public class MusicActivity extends AppCompatActivity implements MediaPlayerContr
         super.onStart();
         if(intent == null){
             intent = new Intent(this, MusicService.class);
-            bindService(intent, musicConnection, Context.BIND_AUTO_CREATE);
             startService(intent);
+            bindService(intent, musicConnection, Context.BIND_AUTO_CREATE);
+
         }
     }
 
     //connect to the service
-    private ServiceConnection musicConnection = new ServiceConnection(){
+    public ServiceConnection musicConnection = new ServiceConnection(){
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -161,7 +164,6 @@ public class MusicActivity extends AppCompatActivity implements MediaPlayerContr
     private void setController(){
         //set the controller up
         controller = new MusicController(this);
-
         controller.setPrevNextListeners(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,7 +188,7 @@ public class MusicActivity extends AppCompatActivity implements MediaPlayerContr
 
     @Override
     public void pause() {
-        playbackPaused=true;
+        playbackPaused = true;
         musService.pausePlayer();
     }
 
@@ -220,9 +222,7 @@ public class MusicActivity extends AppCompatActivity implements MediaPlayerContr
         if (musService != null && musicBound) {
             return musService.isPlaying();
         }
-        else {
-            return false;
-        }
+        return false;
     }
 
     @Override
@@ -287,11 +287,13 @@ public class MusicActivity extends AppCompatActivity implements MediaPlayerContr
             setController();
             paused = false;
         }
+
+        // controller.show(0);
     }
 
     @Override
     protected void onStop() {
-        controller.hide();
+        //controller.hide();
         super.onStop();
     }
 }

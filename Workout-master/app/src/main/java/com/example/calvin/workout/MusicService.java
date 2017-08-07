@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Created by Calvin on 8/4/2017.
+ * Created by fumjum on 8/4/2017.
  */
 
 public class MusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
@@ -33,7 +33,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     private String songTitle="";
     private static final int NOTIFY_ID = 1;
 
-    private final IBinder musicBind = new MusicBinder();
+    public final IBinder musicBind = new MusicBinder();
 
     public void onCreate() {
         super.onCreate();
@@ -193,10 +193,9 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         }
         else {
             position++;
-            if(position > 0) {
-                listOfSongs.size();
+            if (position >= listOfSongs.size()) {
+                position = 0;
             }
-            position = 0;
         }
         playSong();
     }

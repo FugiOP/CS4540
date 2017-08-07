@@ -9,7 +9,8 @@
         android:id="@+id/addExercise"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Item" />
+        android:text="Add Item"
+        android:background="@color/aqua"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/routineList"
@@ -40,5 +41,6 @@
         android:layout_height="wrap_content"
         android:text="Start"
         android:textStyle="bold"
-        android:textSize="60px" />
+        android:textSize="60px"
+        android:background="@color/aqua"/>
 </LinearLayout>

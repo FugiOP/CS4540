@@ -51,7 +51,6 @@ public class AddRoutineFragment extends DialogFragment{
         exerciseList.add("Jump Rope");
 
         List<String> timeList = new ArrayList<>();
-        timeList.add("0");
         timeList.add("30");
         timeList.add("60");
         timeList.add("90");

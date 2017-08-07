@@ -30,7 +30,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String query2 = "CREATE TABLE " + Contract.TABLE_DB_WORKOUT.TABLE_NAME + " (" +
                 Contract.TABLE_DB_WORKOUT._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 Contract.TABLE_DB_WORKOUT.COLUMN_NAME_EXERCISE + " TEXT NOT NULL, " +
-                Contract.TABLE_DB_WORKOUT.COLUMN_NAME_CALORIES + " TEXT NOT NULL " +
+                Contract.TABLE_DB_WORKOUT.COLUMN_NAME_CALORIES + " DOUBLE NOT NULL " +
                 ");";
         db.execSQL(query2);
 
@@ -45,6 +45,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 "INSERT INTO "+Contract.TABLE_DB_WORKOUT.TABLE_NAME+" (name_db,calories_db) VALUES ( " +
                 "'Sit Ups',0.06);";
         db.execSQL(query3);
+
+        String query4 = "CREATE TABLE " + Contract.TABLE_USER_CALORIES.TABLE_NAME + " (" +
+                Contract.TABLE_USER_WORKOUT._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                Contract.TABLE_USER_CALORIES.COLUMN_NAME_CALORIES + " DOUBLE NOT NULL, " +
+                Contract.TABLE_USER_CALORIES.COLUMN_NAME_DATE + " TEXT NOT NULL " +
+                ");";
+
+        db.execSQL(query4);
     }
 
     @Override

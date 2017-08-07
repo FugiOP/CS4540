@@ -26,6 +26,13 @@
         android:textAlignment="center"
         android:textSize="150px"
         android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/exerciseCalories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="100px"
+        android:textStyle="bold"/>
 
     <Button
         android:id="@+id/timerStart"

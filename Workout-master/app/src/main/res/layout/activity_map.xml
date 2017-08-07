@@ -15,17 +15,27 @@
         android:id="@+id/startBtn"
         android:text="Start"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:onClick="trackBtn" />
+
+    <Chronometer
+        android:id="@+id/trackChrono"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="100px"
+        android:textAlignment="center"/>
 
     <TextView
         android:id="@+id/calcDistance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="60px"/>
+        android:textSize="100px"
+        android:textAlignment="center"/>
     <TextView
         android:id="@+id/caloriesBurnt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="60px"/>
+        android:textSize="80px"
+        android:textAlignment="center"/>
 
 </LinearLayout>

@@ -19,4 +19,10 @@ public class Contract{
         public static final String COLUMN_NAME_EXERCISE = "name_db";;
         public static final String COLUMN_NAME_CALORIES = "calories_db";
     }
+
+    public static class TABLE_USER_CALORIES implements BaseColumns{
+        public static final String TABLE_NAME = "calories_user";
+        public static final String COLUMN_NAME_CALORIES = "calories_burnt";
+        public static final String COLUMN_NAME_DATE= "date";
+    }
 }

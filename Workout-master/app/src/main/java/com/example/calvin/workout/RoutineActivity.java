@@ -21,9 +21,13 @@ import android.widget.Toast;
 
 import com.example.calvin.workout.data.Contract;
 import com.example.calvin.workout.data.DBHelper;
+import com.example.calvin.workout.data.UserContract;
+import com.example.calvin.workout.data.userDBHelper;
 import com.example.calvin.workout.models.TimerModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 /**
@@ -33,6 +37,7 @@ import java.util.Locale;
 public class RoutineActivity extends AppCompatActivity implements View.OnClickListener,TextToSpeech.OnInitListener,AddRoutineFragment.OnDialogCloseListener, UpdateRoutineFragment.OnUpdateDialogCloseListener, AdapterView.OnItemSelectedListener{
     Button btn;
     Button timerStart;
+    TextView exerciseCalories;
     static ArrayList<TimerModel> timerlist;
     TextView timerView;
     TextToSpeech textToSpeech;
@@ -43,9 +48,12 @@ public class RoutineActivity extends AppCompatActivity implements View.OnClickLi
     CountDownTimer countDownTimer2;
 
     private RecyclerView rv;
-    private DBHelper helper;
-    private Cursor cursor;
-    private SQLiteDatabase db;
+    private DBHelper helper1;
+    private userDBHelper helper2;
+    private Cursor cursor1;
+    private Cursor cursor2;
+    private SQLiteDatabase db1;
+    private SQLiteDatabase db2;
     RoutineListAdapter adapter;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,7 +61,7 @@ public class RoutineActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_routine);
 
         timerView = (TextView)findViewById(R.id.timerView);
-
+        exerciseCalories = (TextView)findViewById(R.id.exerciseCalories);
         btn = (Button) findViewById(R.id.addExercise);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,19 +88,26 @@ public class RoutineActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onStop() {
         super.onStop();
-        if (db != null) db.close();
-        if (cursor != null) cursor.close();
+        if (db1 != null) db1.close();
+        if (db2 != null) db2.close();
+        if (cursor1 != null) cursor1.close();
+        if (cursor2 != null) cursor2.close();
         if (textToSpeech != null) textToSpeech.shutdown();
     }
     @Override
     protected void onStart() {
         super.onStart();
 
-        helper = new DBHelper(this);
-        db = helper.getWritableDatabase();
-        cursor = getAllItems(db);
+        helper1 = new DBHelper(this);
+        db1 = helper1.getWritableDatabase();
+        cursor1 = getAllItems(db1);
 
-        adapter = new RoutineListAdapter(cursor, new RoutineListAdapter.ItemClickListener() {
+        helper2 = new userDBHelper(this);
+        db2 = helper2.getWritableDatabase();
+        cursor2 = getUserData(db2);
+        cursor2.moveToFirst();
+
+        adapter = new RoutineListAdapter(cursor1, new RoutineListAdapter.ItemClickListener() {
             @Override
             public void onItemClick(int pos ,String name, long id, String time) {
                 FragmentManager fm = getFragmentManager();
@@ -112,16 +127,16 @@ public class RoutineActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 long id = (long) viewHolder.itemView.getTag();
-                removeExercise(db, id);
-                adapter.swapCursor(getAllItems(db));
+                removeExercise(db1, id);
+                adapter.swapCursor(getAllItems(db1));
             }
         }).attachToRecyclerView(rv);
     }
     @Override
     public void closeDialog(String name,String time) {
-        addExercise(db,name,time);
-        cursor = getAllItems(db);
-        adapter.swapCursor(cursor);
+        addExercise(db1,name,time);
+        cursor1 = getAllItems(db1);
+        adapter.swapCursor(cursor1);
     }
     private Cursor getAllItems(SQLiteDatabase db) {
         Cursor result = db.query(
@@ -160,8 +175,8 @@ public class RoutineActivity extends AppCompatActivity implements View.OnClickLi
     }
     @Override
     public void closeUpdateDialog(String name, long id,String time) {
-        updateExercise(db,name, id,time);
-        adapter.swapCursor(getAllItems(db));
+        updateExercise(db1,name, id,time);
+        adapter.swapCursor(getAllItems(db1));
     }
 
     @Override
@@ -171,8 +186,8 @@ public class RoutineActivity extends AppCompatActivity implements View.OnClickLi
 
         // Showing selected spinner item
         Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
-        cursor = getAllItems(db);
-        adapter.swapCursor(cursor);
+        cursor1 = getAllItems(db1);
+        adapter.swapCursor(cursor1);
     }
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
@@ -201,8 +216,8 @@ public class RoutineActivity extends AppCompatActivity implements View.OnClickLi
             }.start();
         }
         if(count==timerlist.size()){
-            timerView.setText("Workout Routine Completed");
-            speak("Workout Routine Completed");
+            timerView.setText("Workout Completed");
+            speak("Workout Completed");
         }
     }
     public void startSecondTimer(){
@@ -223,7 +238,9 @@ public class RoutineActivity extends AppCompatActivity implements View.OnClickLi
 
                 @Override
                 public void onFinish() {
+                    //double calories = calcCalories(name,Integer.valueOf(time));
                     timerView.setText(0+"'s");
+                    //exerciseCalories.setText(calories+"");
                     count++;
                     startFirstTimer();
                 }
@@ -274,5 +291,47 @@ public class RoutineActivity extends AppCompatActivity implements View.OnClickLi
             timerHasStarted = false;
             timerStart.setText("Reset");
         }
+    }
+    private Cursor getUserData(SQLiteDatabase db){
+        return db.query(
+                UserContract.TABLE_USER.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+    private double calcCalories(String name,int time){
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY MMM DD");
+        Calendar calendar = Calendar.getInstance();
+        String currDate = sdf.format(calendar.getTime());
+        double multipler = 0;
+        double totalCalories = 0;
+        double currCalories;
+
+        int weight = cursor2.getColumnIndex(UserContract.TABLE_USER.COLUMN_NAME_WEIGHT);
+
+        while(cursor1.moveToNext()){
+            if(currDate.equals(cursor1.getString(cursor1.getColumnIndex(Contract.TABLE_USER_CALORIES.COLUMN_NAME_DATE)))){
+                totalCalories = cursor1.getColumnIndex(Contract.TABLE_USER_CALORIES.COLUMN_NAME_CALORIES);
+            }
+            if(name.equals(cursor1.getString(cursor1.getColumnIndex(Contract.TABLE_DB_WORKOUT.COLUMN_NAME_EXERCISE)))){
+                multipler = cursor1.getColumnIndex(Contract.TABLE_DB_WORKOUT.COLUMN_NAME_CALORIES);
+            }
+        }
+        currCalories = weight*multipler*time;
+        totalCalories = totalCalories+currCalories;
+        updateUserCalories(currDate,totalCalories);
+
+        return totalCalories;
+    }
+    private int updateUserCalories(String date, double calories){
+        ContentValues cv = new ContentValues();
+        cv.put(Contract.TABLE_USER_CALORIES.COLUMN_NAME_DATE, date);
+        cv.put(Contract.TABLE_USER_CALORIES.COLUMN_NAME_CALORIES,calories);
+
+        return db1.update(Contract.TABLE_USER_CALORIES.TABLE_NAME, cv,Contract.TABLE_USER_CALORIES.COLUMN_NAME_DATE + "'"+date+"'", null);
     }
 }

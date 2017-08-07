@@ -19,7 +19,7 @@ public class GraphActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM d");
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY MMM d");
 
         // generate Dates
         Calendar calendar = Calendar.getInstance();

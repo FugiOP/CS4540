@@ -32,6 +32,7 @@ import static com.example.calvin.workout.data.UserContract.TABLE_USER.TABLE_NAME
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
+    MusicActivity musicActivity = new MusicActivity();
     private SQLiteDatabase db;
     private userDBHelper helper;
     private TextView User;
@@ -169,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
 
         });
+        bindService(new Intent(MainActivity.this, MusicService.class), musicActivity.musicConnection, BIND_AUTO_CREATE);
     }
 
     public void sendUser(View v) {

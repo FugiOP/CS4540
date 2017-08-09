@@ -1,7 +1,7 @@
 package com.example.calvin.workout.models;
 
 /**
- * Created by Calvin on 8/4/2017.
+ * Created by fumjum on 8/4/2017.
  */
 
 public class SongModel {

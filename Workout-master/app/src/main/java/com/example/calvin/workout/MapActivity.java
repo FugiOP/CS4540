@@ -127,7 +127,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         DecimalFormat df = new DecimalFormat("#.00");
                         calcDist.setText(df.format(((distanceCovered*100.0)/100.0)*0.00062137119) + " miles");
                         caloriesBurnt.setText("Calories burned: "+df.format((((distanceCovered*100.0)/100.0)*0.00062137119*0.76*200)));
+<<<<<<< HEAD
                         updateUserCalories(db_date_calorie,(((distanceCovered*100.0)/100.0)*0.00062137119*0.76*200));
+=======
+>>>>>>> c17e5616bce38ab0d5bd4823a0f9c58936df1813
                     }
                 }
         );

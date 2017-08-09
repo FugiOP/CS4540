@@ -54,13 +54,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL(query4);
 
-        String query5 = "INSERT INTO "+Contract.TABLE_USER_CALORIES.TABLE_NAME+" (calories_burnt,date) VALUES ( 280,'2017-8-6');";
+        String query5 = "INSERT INTO "+Contract.TABLE_USER_CALORIES.TABLE_NAME+" (calories_burnt,date) VALUES ( 280,'2017 Aug 6');";
         db.execSQL(query5);
-        query5 = "INSERT INTO "+Contract.TABLE_USER_CALORIES.TABLE_NAME+" (calories_burnt,date) VALUES ( 301,'2017-8-7');";
+        query5 = "INSERT INTO "+Contract.TABLE_USER_CALORIES.TABLE_NAME+" (calories_burnt,date) VALUES ( 301,'2017 Aug 7');";
         db.execSQL(query5);
-        query5 = "INSERT INTO "+Contract.TABLE_USER_CALORIES.TABLE_NAME+" (calories_burnt,date) VALUES ( 294,'2017-8-8');";
+        query5 = "INSERT INTO "+Contract.TABLE_USER_CALORIES.TABLE_NAME+" (calories_burnt,date) VALUES ( 294,'2017 Aug 8');";
         db.execSQL(query5);
-        query5 = "INSERT INTO "+Contract.TABLE_USER_CALORIES.TABLE_NAME+" (calories_burnt,date) VALUES ( 300,'2017-8-9');";
+        query5 = "INSERT INTO "+Contract.TABLE_USER_CALORIES.TABLE_NAME+" (calories_burnt,date) VALUES ( 0,'2017 Aug 9');";
         db.execSQL(query5);
     }
 

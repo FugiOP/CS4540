@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
@@ -16,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -67,6 +67,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private CountDownTimer mCDTimer;
     Chronometer myChronometer;
     DecimalFormat df;
+    String date;
 
 
     ArrayList<LatLng> routePoints;
@@ -74,7 +75,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     Button startBtn;
     TextView calcDist;
     TextView caloriesBurnt;
-    double totalCalories = 0;
+    double totalCalories = 0.00;
+    double prevCalories;
 
     Cursor date_calorie_cursor;
     private SQLiteDatabase db_date_calorie;
@@ -88,17 +90,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_map);
 
         points = new ArrayList<LatLng>();
-        df = new DecimalFormat("#.00");
+        df = new DecimalFormat("0.00");
         mRequestingLocationUpdates = true;
 
         startBtn = (Button) findViewById(R.id.startBtn);
         myChronometer = (Chronometer)findViewById(R.id.trackChrono);
 
         calcDist = (TextView)findViewById(R.id.calcDistance);
-        calcDist.setText("0.00 meters");
+        calcDist.setText(".00 meters");
 
         caloriesBurnt = (TextView)findViewById(R.id.caloriesBurnt);
-        caloriesBurnt.setText("Calories burned : "+totalCalories);
+        caloriesBurnt.setText("Calories Burned : "+totalCalories);
 
         oldLocation= new Location("dummy data");
 
@@ -124,13 +126,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     public void onChronometerTick(Chronometer chronometer) {
                         // TODO Auto-generated method stub
                         addToPolyline(oldLocation);
-                        DecimalFormat df = new DecimalFormat("#.00");
                         calcDist.setText(df.format(((distanceCovered*100.0)/100.0)*0.00062137119) + " miles");
-                        caloriesBurnt.setText("Calories burned: "+df.format((((distanceCovered*100.0)/100.0)*0.00062137119*0.76*200)));
-<<<<<<< HEAD
-                        updateUserCalories(db_date_calorie,(((distanceCovered*100.0)/100.0)*0.00062137119*0.76*200));
-=======
->>>>>>> c17e5616bce38ab0d5bd4823a0f9c58936df1813
+                        caloriesBurnt.setText("Calories Burned: "+df.format((((distanceCovered*100.0)/100.0)*0.00062137119*0.76*200)));
+                        updateUserCalories(db_date_calorie,(((distanceCovered*100.0)/100.0)*0.00062137119*0.76*200),date);
                     }
                 }
         );
@@ -235,6 +233,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             startActivity(intent);
         }else if (item.getItemId() == R.id.profile) {
             Intent intent = new Intent(this,UpdateProfile.class);
+            startActivity(intent);
+        }else if (item.getItemId() == R.id.calories) {
+            Intent intent = new Intent(this,FoodActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
@@ -347,24 +348,38 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         startBtn.setText("End");
         initPolyline();
         distanceCovered = 0;
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY MMM d");
+        Calendar calendar = Calendar.getInstance();
+        date = sdf.format(calendar.getTime());
+        prevCalories = getPrevCalories(db_date_calorie, date);
         myChronometer.setBase(SystemClock.elapsedRealtime());
         myChronometer.start();
     }
 
     public void endTracking(View view) {
         startBtn.setText("Start");
-        caloriesBurnt.setText("Calories Burned: 0.0");
+        caloriesBurnt.setText("Calories Burned: 0.00");
         myChronometer.stop();
     }
-    public int updateUserCalories(SQLiteDatabase db, double calories){
-        SimpleDateFormat sdf = new SimpleDateFormat("YYYY MMM d");
-        Calendar calendar = Calendar.getInstance();
-        String date = sdf.format(calendar.getTime());
-
+    public int updateUserCalories(SQLiteDatabase db, double calories,String date){
         ContentValues cv = new ContentValues();
         cv.put(Contract.TABLE_USER_CALORIES.COLUMN_NAME_DATE, date);
-        cv.put(Contract.TABLE_USER_CALORIES.COLUMN_NAME_CALORIES,calories);
-
+        cv.put(Contract.TABLE_USER_CALORIES.COLUMN_NAME_CALORIES,calories+prevCalories);
         return db.update(Contract.TABLE_USER_CALORIES.TABLE_NAME, cv,Contract.TABLE_USER_CALORIES.COLUMN_NAME_DATE + "='"+date+"'", null);
+    }
+    private double getPrevCalories(SQLiteDatabase db,String date){
+        double result = 0;
+        Cursor cursor = db.query(
+                Contract.TABLE_USER_CALORIES.TABLE_NAME,
+                null,
+                Contract.TABLE_USER_CALORIES.COLUMN_NAME_DATE+"='"+date+"'",
+                null,
+                null,
+                null,
+                null
+        );
+        cursor.moveToFirst();
+        result = cursor.getDouble(cursor.getColumnIndex(Contract.TABLE_USER_CALORIES.COLUMN_NAME_CALORIES));
+        return result;
     }
 }

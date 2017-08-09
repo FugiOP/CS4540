@@ -127,8 +127,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         // TODO Auto-generated method stub
                         addToPolyline(oldLocation);
                         calcDist.setText(df.format(((distanceCovered*100.0)/100.0)*0.00062137119) + " miles");
+<<<<<<< HEAD
                         caloriesBurnt.setText("Calories Burned: "+df.format((((distanceCovered*100.0)/100.0)*0.00062137119*0.76*200)));
                         updateUserCalories(db_date_calorie,(((distanceCovered*100.0)/100.0)*0.00062137119*0.76*200),date);
+=======
+                        caloriesBurnt.setText("Calories burned: "+df.format((((distanceCovered*100.0)/100.0)*0.00062137119*0.76*200)));
+                        updateUserCalories(db_date_calorie,(((distanceCovered*100.0)/100.0)*0.00062137119*0.76*200));
+>>>>>>> bf158feeefd0624210fb47d417a18be4cceeacff
                     }
                 }
         );
@@ -367,6 +372,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         cv.put(Contract.TABLE_USER_CALORIES.COLUMN_NAME_CALORIES,calories+prevCalories);
         return db.update(Contract.TABLE_USER_CALORIES.TABLE_NAME, cv,Contract.TABLE_USER_CALORIES.COLUMN_NAME_DATE + "='"+date+"'", null);
     }
+<<<<<<< HEAD
     private double getPrevCalories(SQLiteDatabase db,String date){
         double result = 0;
         Cursor cursor = db.query(
@@ -383,3 +389,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         return result;
     }
 }
+=======
+}
+>>>>>>> bf158feeefd0624210fb47d417a18be4cceeacff

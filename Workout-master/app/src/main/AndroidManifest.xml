@@ -55,6 +55,12 @@
             android:screenOrientation="portrait"
             android:parentActivityName=".MapActivity">
         </activity>
+        <activity
+            android:name=".FoodActivity"
+            android:label="Food"
+            android:parentActivityName=".MapActivity"
+            >
+        </activity>
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key"/>

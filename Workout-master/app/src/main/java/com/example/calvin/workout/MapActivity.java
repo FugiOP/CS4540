@@ -1,7 +1,10 @@
 package com.example.calvin.workout;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
@@ -21,6 +24,8 @@ import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.calvin.workout.data.Contract;
+import com.example.calvin.workout.data.DBHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -36,7 +41,9 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by FugiBeast on 8/5/2017.
@@ -69,6 +76,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     TextView caloriesBurnt;
     double totalCalories = 0;
 
+    Cursor date_calorie_cursor;
+    private SQLiteDatabase db_date_calorie;
+    private DBHelper helper_date_calorie;
+
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
 
     @Override
@@ -82,12 +93,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         startBtn = (Button) findViewById(R.id.startBtn);
         myChronometer = (Chronometer)findViewById(R.id.trackChrono);
+
         calcDist = (TextView)findViewById(R.id.calcDistance);
         calcDist.setText("0.00 meters");
+
         caloriesBurnt = (TextView)findViewById(R.id.caloriesBurnt);
         caloriesBurnt.setText("Calories burned : "+totalCalories);
 
         oldLocation= new Location("dummy data");
+
+        helper_date_calorie = new DBHelper(this);
+        db_date_calorie = helper_date_calorie.getReadableDatabase();
 
         buildGoogleApiClient();
 
@@ -110,6 +126,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         addToPolyline(oldLocation);
                         DecimalFormat df = new DecimalFormat("#.00");
                         calcDist.setText(df.format(((distanceCovered*100.0)/100.0)*0.00062137119) + " miles");
+                        caloriesBurnt.setText("Calories burned: "+df.format((((distanceCovered*100.0)/100.0)*0.00062137119*0.76*200)));
+                        updateUserCalories(db_date_calorie,(((distanceCovered*100.0)/100.0)*0.00062137119*0.76*200));
                     }
                 }
         );
@@ -147,6 +165,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void createLocationRequest() {
         mLocationRequest = new LocationRequest();
+        mLocationRequest.setSmallestDisplacement(20);
         mLocationRequest.setInterval(LOCATION_REQUEST_INTERVAL);
         mLocationRequest.setFastestInterval(LOCATION_REQUEST_FASTEST_INTERVAL);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
@@ -331,6 +350,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     public void endTracking(View view) {
         startBtn.setText("Start");
+        caloriesBurnt.setText("Calories Burned: 0.0");
         myChronometer.stop();
+    }
+    public int updateUserCalories(SQLiteDatabase db, double calories){
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY MMM d");
+        Calendar calendar = Calendar.getInstance();
+        String date = sdf.format(calendar.getTime());
+
+        ContentValues cv = new ContentValues();
+        cv.put(Contract.TABLE_USER_CALORIES.COLUMN_NAME_DATE, date);
+        cv.put(Contract.TABLE_USER_CALORIES.COLUMN_NAME_CALORIES,calories);
+
+        return db.update(Contract.TABLE_USER_CALORIES.TABLE_NAME, cv,Contract.TABLE_USER_CALORIES.COLUMN_NAME_DATE + "='"+date+"'", null);
     }
 }

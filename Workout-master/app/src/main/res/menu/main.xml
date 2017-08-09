@@ -22,4 +22,9 @@
         android:orderInCategory="4"
         android:title="Graph" />
 
+    <item
+        android:id="@+id/calories"
+        android:orderInCategory="5"
+        android:title="Food" />
+
 </menu>
